@@ -98,8 +98,13 @@ function App() {
         {screen.name === "mission" && (
           <DQ.MissionDraw
             book={screen.book}
-            onStart={(mission) =>
-              setScreen({ name: "reading", book: screen.book, mission })
+            onStart={(mission, sessionMinutes) =>
+              setScreen({
+                name: "reading",
+                book: screen.book,
+                mission,
+                sessionMinutes,
+              })
             }
             onBack={() => setScreen({ name: "home" })}
           />
@@ -109,6 +114,7 @@ function App() {
           <DQ.ReadingTimer
             book={screen.book}
             mission={screen.mission}
+            sessionMinutes={screen.sessionMinutes}
             onFinish={(minutes) =>
               setScreen({
                 name: "memo",

@@ -6,6 +6,9 @@ window.DQ = window.DQ || {};
 // 公開URL(シェア機能で使う)
 DQ.APP_URL = "https://daichi-nakamura2.github.io/dokusho-quest/";
 
+// 選べる読書時間(分)
+DQ.SESSION_OPTIONS = [15, 25, 60, 90];
+
 // ---------- ミッションカード ----------
 // rarity: "normal"(出やすい) / "rare"(ときどき) / "epic"(めったに出ない)
 DQ.MISSIONS = [

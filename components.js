@@ -229,6 +229,7 @@ const DQ_RARITY_BADGE = {
 
 DQ.MissionDraw = function MissionDraw({ book, onStart, onBack }) {
   const [mission, setMission] = React.useState(null);
+  const [minutes, setMinutes] = React.useState(DQ.SESSION_OPTIONS[0]);
 
   return (
     <section className="animate-fade-up space-y-4 text-center">
@@ -273,6 +274,28 @@ DQ.MissionDraw = function MissionDraw({ book, onStart, onBack }) {
             </p>
           </div>
 
+          <div>
+            <p className="text-sm font-bold text-stone-600 dark:text-stone-300">
+              ⏱ 今日の読書時間
+            </p>
+            <div className="mt-2 flex justify-center gap-2">
+              {DQ.SESSION_OPTIONS.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMinutes(m)}
+                  className={
+                    minutes === m
+                      ? "rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-sm font-bold text-white shadow"
+                      : "rounded-full border-2 border-amber-300 bg-white/70 px-4 py-2 text-sm font-bold text-stone-500 transition hover:bg-amber-50 active:scale-95 dark:border-stone-600 dark:bg-stone-800/70 dark:text-stone-400 dark:hover:bg-stone-700"
+                  }
+                >
+                  {m}分
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="flex justify-center gap-3">
             <button
               type="button"
@@ -283,7 +306,7 @@ DQ.MissionDraw = function MissionDraw({ book, onStart, onBack }) {
             </button>
             <button
               type="button"
-              onClick={() => onStart(mission)}
+              onClick={() => onStart(mission, minutes)}
               className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2 font-bold text-white shadow transition hover:brightness-110 active:scale-95"
             >
               クエスト開始!
@@ -303,16 +326,22 @@ DQ.MissionDraw = function MissionDraw({ book, onStart, onBack }) {
   );
 };
 
-// ---------- 15分読書タイマー ----------
-const DQ_SESSION_SECONDS = 15 * 60;
+// ---------- 読書タイマー(時間は sessionMinutes で指定) ----------
 
 // 経過秒数から獲得扱いにする読書分数を計算(最低1分)
 function dqElapsedToMinutes(elapsedSeconds) {
   return Math.max(1, Math.round(elapsedSeconds / 60));
 }
 
-DQ.ReadingTimer = function ReadingTimer({ book, mission, onFinish, onAbort }) {
-  const [remaining, setRemaining] = React.useState(DQ_SESSION_SECONDS);
+DQ.ReadingTimer = function ReadingTimer({
+  book,
+  mission,
+  sessionMinutes,
+  onFinish,
+  onAbort,
+}) {
+  const totalSeconds = sessionMinutes * 60;
+  const [remaining, setRemaining] = React.useState(totalSeconds);
   const [isPaused, setIsPaused] = React.useState(false);
   const onFinishRef = React.useRef(onFinish);
   onFinishRef.current = onFinish;
@@ -323,18 +352,18 @@ DQ.ReadingTimer = function ReadingTimer({ book, mission, onFinish, onAbort }) {
       setRemaining((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          onFinishRef.current(dqElapsedToMinutes(DQ_SESSION_SECONDS));
+          onFinishRef.current(dqElapsedToMinutes(totalSeconds));
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, totalSeconds]);
 
   const minutes = Math.floor(remaining / 60);
   const seconds = remaining % 60;
-  const progress = 1 - remaining / DQ_SESSION_SECONDS;
+  const progress = 1 - remaining / totalSeconds;
 
   const handleAbort = () => {
     if (window.confirm("クエストを中断しますか?(記録は残りません)")) {
@@ -381,7 +410,7 @@ DQ.ReadingTimer = function ReadingTimer({ book, mission, onFinish, onAbort }) {
         <button
           type="button"
           onClick={() =>
-            onFinish(dqElapsedToMinutes(DQ_SESSION_SECONDS - remaining))
+            onFinish(dqElapsedToMinutes(totalSeconds - remaining))
           }
           className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2 font-bold text-white shadow transition hover:brightness-110 active:scale-95"
         >

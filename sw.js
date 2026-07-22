@@ -2,7 +2,7 @@
 // Service Worker: オフライン対応のためのキャッシュ管理
 // アプリのファイルを更新したら CACHE_VERSION を上げること
 // ============================================================
-const CACHE_VERSION = "dokusho-quest-v1";
+const CACHE_VERSION = "dokusho-quest-v2";
 
 // インストール時にキャッシュするアプリ本体のファイル
 const APP_ASSETS = [
