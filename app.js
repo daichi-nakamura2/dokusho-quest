@@ -71,6 +71,8 @@ function App() {
         prevLevel,
         newLevel,
         leveledUp: newLevel > prevLevel,
+        bookTitle: book.title,
+        minutes,
       },
     });
   };

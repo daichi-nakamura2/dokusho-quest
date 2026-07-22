@@ -36,20 +36,35 @@ Node.js のビルド環境なしで動くよう、CDN読み込みの構成にし
 - **localStorage** にデータ保存(キー: `dokusho-quest-data-v1` / `dokusho-quest-theme`)
 - インターネット接続が必要(CDN・Google Fonts)
 
-## ファイル構成
+## ファイル構成(すべて平置き — GitHub と同じ構成)
 
 ```
 dokusho-quest/
-├── index.html        # エントリ。CDN読み込み・Tailwindテーマ・アニメーション定義
-├── server.js         # 静的ファイルサーバー(依存パッケージなし、port 3006)
-└── js/
-    ├── data.js       # ミッションカード・レベル・称号・XP計算(プレーンJS)
-    ├── storage.js    # localStorage 保存・読み込み(プレーンJS)
-    ├── components.js # UIコンポーネント(JSX)
-    └── app.js        # アプリ本体・画面遷移(JSX)
+├── index.html            # エントリ。CDN読み込み・OGP・PWAメタ・SW登録
+├── data.js               # ミッションカード・レベル・称号・XP計算(プレーンJS)
+├── storage.js            # localStorage 保存・読み込み(プレーンJS)
+├── components.js         # UIコンポーネント(JSX)。シェア機能もここ
+├── app.js                # アプリ本体・画面遷移(JSX)
+├── manifest.webmanifest  # PWAマニフェスト(ホーム画面追加用)
+├── sw.js                 # Service Worker(オフラインキャッシュ)
+├── icon-192.png / icon-512.png / apple-touch-icon.png  # アプリアイコン
+├── ogp.png               # SNSシェア用画像(1200x630)
+└── server.js             # ローカル開発用サーバー(依存ゼロ、port 3006)
 ```
 
 画面遷移: `home → mission(カード抽選) → reading(タイマー) → memo → result → home`
+
+## PWA・シェア・OGP
+
+- **PWA**: スマホでブラウザメニューから「ホーム画面に追加」するとアプリとして起動。2回目以降はオフラインでも動く。**JSファイルを更新したら `sw.js` の `CACHE_VERSION` を上げること**(例: v1 → v2)。上げないと利用者に更新が届きにくい
+- **シェア**: リザルト画面の「📣 成果をシェアする」。スマホはOS共有シート、PCはXの投稿画面が開く
+- **OGP**: SNSにURLを貼ると `ogp.png` とタイトル・説明文が表示される
+
+## 公開(GitHub Pages)
+
+- 公開URL: https://daichi-nakamura2.github.io/dokusho-quest/
+- 更新方法: リポジトリ https://github.com/daichi-nakamura2/dokusho-quest で「Add file → Upload files」→ 「アップロード用_dokusho-quest」内の変更ファイルをドラッグ → Commit
+- ローカルと公開版は同じ平置き構成。**index.html はどちらのフォルダのものも同一**なので取り違えの心配なし
 
 ## デザイン
 

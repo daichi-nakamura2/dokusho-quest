@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>読書クエスト 📚</title>
 
+    <!-- 検索・SNSシェア用(OGP) -->
+    <meta
+      name="description"
+      content="読書をRPG化!ミッションカードを引いて15分の読書クエストに挑戦。学びをメモしてEXPを獲得、レベルアップしよう。"
+    />
+    <meta property="og:title" content="読書クエスト 📚" />
+    <meta
+      property="og:description"
+      content="読書をRPG化!ミッションカードを引いて15分の読書クエストに挑戦。学びをメモしてEXPを獲得、レベルアップしよう。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://daichi-nakamura2.github.io/dokusho-quest/" />
+    <meta property="og:image" content="https://daichi-nakamura2.github.io/dokusho-quest/ogp.png" />
+    <meta property="og:site_name" content="読書クエスト" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- PWA -->
+    <meta name="theme-color" content="#f59e0b" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon-192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
     <!-- フォント -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -71,5 +93,16 @@
     <!-- UIコンポーネント(JSX / Babelで変換) -->
     <script type="text/babel" data-presets="react" src="components.js"></script>
     <script type="text/babel" data-presets="react" src="app.js"></script>
+
+    <!-- PWA: Service Worker 登録(オフライン対応・ホーム画面追加) -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(() => {
+            // 登録に失敗してもアプリは通常どおり動く
+          });
+        });
+      }
+    </script>
   </body>
 </html>

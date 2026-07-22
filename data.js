@@ -3,6 +3,9 @@
 // ============================================================
 window.DQ = window.DQ || {};
 
+// 公開URL(シェア機能で使う)
+DQ.APP_URL = "https://daichi-nakamura2.github.io/dokusho-quest/";
+
 // ---------- ミッションカード ----------
 // rarity: "normal"(出やすい) / "rare"(ときどき) / "epic"(めったに出ない)
 DQ.MISSIONS = [

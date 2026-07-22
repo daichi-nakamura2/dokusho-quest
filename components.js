@@ -450,6 +450,24 @@ DQ.MemoForm = function MemoForm({ book, mission, minutes, onComplete }) {
 };
 
 // ---------- リザルト画面 ----------
+
+/** 読書の成果をSNSにシェアする(スマホは共有シート、PCはXの投稿画面) */
+function dqShareResult(result) {
+  const title = DQ.titleForLevel(result.newLevel);
+  const text =
+    `📚読書クエスト:『${result.bookTitle}』を${result.minutes}分読んで +${result.xpGained} EXP獲得!` +
+    `${result.leveledUp ? `✨レベルアップして` : `現在`} Lv.${result.newLevel}「${title}」 #読書クエスト`;
+
+  if (navigator.share) {
+    navigator.share({ text, url: DQ.APP_URL }).catch(() => {
+      // ユーザーが共有をキャンセルした場合は何もしない
+    });
+  } else {
+    const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(DQ.APP_URL)}`;
+    window.open(intent, "_blank", "noopener");
+  }
+}
+
 DQ.ResultScreen = function ResultScreen({ result, onClose }) {
   return (
     <section className="animate-pop-in space-y-4 text-center">
@@ -490,13 +508,22 @@ DQ.ResultScreen = function ResultScreen({ result, onClose }) {
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={onClose}
-        className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-3 font-bold text-white shadow transition hover:brightness-110 active:scale-95"
-      >
-        ホームにもどる
-      </button>
+      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <button
+          type="button"
+          onClick={() => dqShareResult(result)}
+          className="rounded-full border-2 border-amber-400 bg-white/70 px-6 py-3 font-bold text-amber-700 transition hover:bg-amber-50 active:scale-95 dark:bg-stone-800/70 dark:text-amber-300 dark:hover:bg-stone-700"
+        >
+          📣 成果をシェアする
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-3 font-bold text-white shadow transition hover:brightness-110 active:scale-95"
+        >
+          ホームにもどる
+        </button>
+      </div>
     </section>
   );
 };
